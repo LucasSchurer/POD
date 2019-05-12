@@ -8,6 +8,13 @@
 #define NUM_NUMS 16
 #define NUM_CAMINHOS 3
 
+int execucoes (int tam) {
+  int cont = 0;
+  for(int x = RAM; x < tam; x*=NUM_CAMINHOS)
+    cont++;
+  return cont;
+}
+
 // Cria um arquivo temporario chamado nome com tam numeros aleatorios. 
 // Os numeros gerados sÃ£o mostrados na tela. 
 void cria_arq_rand(char *nome, int tam){
@@ -16,7 +23,7 @@ void cria_arq_rand(char *nome, int tam){
   arq = fopen(nome,"wb"); 
 
   for (int i = 0; i < tam; i++) {
-    num = random()%100;
+    num = rand()%100;
     fwrite(&num, sizeof(num), 1, arq);
     printf("%d:%d\t",j++,num);
     if (j%RAM==0) 
@@ -24,7 +31,7 @@ void cria_arq_rand(char *nome, int tam){
   }
   printf("\n");
   printf("\n");
-//  fflush(arq); // garante que tudo foi gravado antes de fechar
+  fflush(arq); // garante que tudo foi gravado antes de fechar
   fclose(arq);
 }
 
@@ -48,7 +55,7 @@ void le_arq(char *nome){
 
 void fecha_arqs(int num, FILE **arqs){
   for (int i =0; i < num; i++){
-    //fflush(arqs[i]); // garante que tudo foi gravado antes de fechar
+    fflush(arqs[i]); // garante que tudo foi gravado antes de fechar
     fclose(arqs[i]);
   }
 }
@@ -62,8 +69,9 @@ void abre_arqs_temp(int inicio, int fim, char *nome_arq, FILE **arqstemp, char *
   }
 }
 
-void intercalacao_balanceada(){
+void intercalacao_balanceada(int num_caminhos, char* nome_arq){
   //TODO
+  
 }
 
 void distribui(int num_caminhos, char *nome_arq){
@@ -85,11 +93,11 @@ void distribui(int num_caminhos, char *nome_arq){
   fecha_arqs(num_caminhos, arqstemp);
 
   // TODO 
-  intercalacao_balanceada();
+  intercalacao_balanceada(num_caminhos, nome_arq);
 }
 
 int main(){
-  //srand(time(NULL));
+  srand(time(NULL));
   char nome_arq[]="teste.arq";
   char *nome_arq_temp = malloc(sizeof(char)*strlen(nome_arq)+3); // suporta ate .99 arquivos
   cria_arq_rand(nome_arq, NUM_NUMS);
